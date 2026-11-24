@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <script>(function(){var p=new URLSearchParams(location.search).get('page');var m={results:'results.html',qr:'qr.html',admin:'admin.html'};if(m[p])location.replace(m[p]);})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>قيّم المتحدث · مسابقة التواصل الشفهي</title>
+  <meta name="theme-color" content="#2f5d3a">
+  <meta charset="utf-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#2f5d3a; --green-d:#1f3f27; --sage:#9caf88; --sage-l:#dfe7d6;
+    --beige:#efe8d8; --cream:#f8f5ee; --ink:#1f2a22; --muted:#5f6b60; --gold:#c9a227;
+    --line:#e2dccd; --red:#a33b2b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:'Tajawal',system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px}
+  .top{background:linear-gradient(135deg,var(--green) 0%,var(--green-d) 100%);color:#fff;padding:26px 0 30px;border-bottom:6px solid var(--sage)}
+  .eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;direction:ltr;text-align:right}
+  .top h1{margin:4px 0 2px;font-size:clamp(24px,5.5vw,36px);font-weight:800;line-height:1.25}
+  .top .sub{margin:0;opacity:.9;font-size:16px}
+  main{padding:18px 0 40px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin:0 0 14px;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+  .center{text-align:center}
+  h2{margin:0 0 12px;font-size:19px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  h2 small{font-weight:500;color:var(--muted);font-size:13px}
+  .num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--sage-l);color:var(--green);font-weight:800;font-size:15px}
+  .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .chip{border:2px solid var(--line);background:var(--cream);border-radius:12px;padding:12px 6px;font:inherit;font-weight:700;font-size:16px;cursor:pointer;color:var(--ink)}
+  .chip span{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+  .chip.on{border-color:var(--green);background:var(--green);color:#fff}
+  .chip.on span{color:#e6efe0}
+  select,textarea{width:100%;font:inherit;font-size:16px;padding:12px;border:2px solid var(--line);border-radius:12px;background:var(--cream);color:var(--ink)}
+  select:focus,textarea:focus{outline:none;border-color:var(--sage)}
+  .pinfo{margin-top:10px;font-size:14px;color:var(--muted)}
+  .pinfo b{color:var(--ink)}
+  .crit{padding:14px 0;border-top:1px dashed var(--line)}
+  .crit:first-child{border-top:0;padding-top:0}
+  .crit-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .crit h3{margin:0;font-size:17px}
+  .crit .en{font-size:13px;color:var(--muted);direction:ltr}
+  .crit p{margin:4px 0 8px;font-size:14px;color:var(--muted)}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .tag{font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--beige);color:var(--green-d);font-weight:700}
+  .tag.moe{background:var(--sage-l)}
+  .tag.atl{background:#fff;border:1px solid var(--sage);color:var(--green)}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .scale button{font:inherit;font-weight:800;font-size:18px;padding:10px 0;border-radius:10px;border:2px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
+  .scale button.on{background:var(--green);border-color:var(--green);color:#fff}
+  .scale button.lit{background:var(--sage-l);border-color:var(--sage)}
+  .scale-label{font-size:13px;color:var(--green);font-weight:700;min-height:20px;margin-top:6px}
+  .submitbar{position:sticky;bottom:0;background:rgba(248,245,238,.96);backdrop-filter:blur(6px);padding:12px 0;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line)}
+  .total{font-size:16px}
+  .total b{font-size:22px;color:var(--green)}
+  .btn{font:inherit;font-weight:800;font-size:16px;background:var(--green);color:#fff;border:0;border-radius:12px;padding:13px 20px;cursor:pointer;text-decoration:none;display:inline-block}
+  .btn:disabled{opacity:.55;cursor:wait}
+  .btn.ghost{background:transparent;color:var(--green);border:2px solid var(--green)}
+  .error{color:var(--red);font-weight:700;text-align:center}
+  .big{font-size:56px;line-height:1;margin:6px 0}
+  .muted{color:var(--muted)}
+  .links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+</style>
+
+<script>
+window.API_URL = 'https://script.google.com/macros/s/AKfycbwBA3iY7kzZPwp8DLl5d9Ya0-vaBjB2ucYUoC4-EsnXxqFiS4vm9YVRlP5pqnKqcrPawQ/exec';
+window.google = { script: { run: (function () {
+  function get(q) { return fetch(API_URL + '?api=' + q).then(function (r) { return r.json(); }); }
+  function post(action, payload) {
+    return fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: action, payload: payload }) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { if (!j.ok) throw new Error(j.error || 'Error'); return j.data; });
+  }
+  var calls = {
+    getPublicData: function () { return get('data'); },
+    getResults: function () { return get('results'); },
+    submitVote: function (p) { return post('vote', p); },
+    addStudent: function (p) { return post('add', p); }
+  };
+  function runner(ok, fail) {
+    var api = {
+      withSuccessHandler: function (f) { return runner(f, fail); },
+      withFailureHandler: function (f) { return runner(ok, f); }
+    };
+    Object.keys(calls).forEach(function (k) {
+      api[k] = function (arg) {
+        calls[k](arg).then(function (r) { ok && ok(r); }).catch(function (e) { fail && fail(e); });
+      };
+    });
+    return api;
+  }
+  return runner(null, null);
+})() } };
+</script>
+  <style>
+    .top{padding:16px 0 18px}
+    .top h1{font-size:clamp(20px,5vw,28px)}
+    .who{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted);margin-bottom:12px}
+    .who b{color:var(--green)}
+    .who button{font:inherit;font-size:13px;color:var(--green);background:none;border:0;text-decoration:underline;cursor:pointer;min-height:36px}
+    .search{width:100%;font:inherit;font-size:17px;padding:14px;border:2px solid var(--line);border-radius:14px;background:#fff}
+    .search:focus{outline:none;border-color:var(--sage)}
+    .years{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap}
+    .years button{font:inherit;font-weight:700;font-size:14px;min-height:40px;padding:6px 14px;border-radius:999px;border:2px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
+    .years button.on{background:var(--green);border-color:var(--green);color:#fff}
+    .names{display:grid;gap:6px}
+    .name{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;text-align:start;font:inherit;font-size:16px;font-weight:700;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;color:var(--ink);direction:ltr}
+    .name small{font-weight:500;color:var(--muted);font-size:13px}
+    .name.done{opacity:.55}
+    .name.done::after{content:'✓';color:var(--green);font-weight:800}
+    .speaker{text-align:center;background:var(--green);color:#fff;border-radius:16px;padding:16px;margin-bottom:14px}
+    .speaker .n{font-size:24px;font-weight:800;direction:ltr}
+    .speaker .m{opacity:.85;font-size:14px}
+    .voters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+    .q{padding:12px 0;border-top:1px dashed var(--line)}
+    .q:first-child{border-top:0;padding-top:0}
+    .q h3{margin:0;font-size:18px}
+    .q .h{font-size:13px;color:var(--muted);margin:2px 0 8px}
+    .stars{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;direction:rtl}
+    .stars button{font-size:30px;line-height:1;padding:8px 0;border-radius:12px;border:2px solid var(--line);background:#fff;cursor:pointer;filter:grayscale(1);opacity:.45}
+    .stars button.lit{filter:none;opacity:1;border-color:var(--gold);background:#fffaf0}
+    .stars-l{font-size:13px;font-weight:700;color:var(--green);min-height:18px;margin-top:4px}
+    .send{width:100%;font-size:19px;padding:16px;margin-top:6px}
+    .addc{font:inherit;font-size:14px;color:var(--green);background:none;border:0;text-decoration:underline;cursor:pointer;min-height:40px}
+    .back{font:inherit;font-size:14px;color:var(--green);background:none;border:0;cursor:pointer;min-height:40px;padding:0}
+    .empty{text-align:center;color:var(--muted);padding:16px}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="eyebrow">Arabic A · Oral Communication</div>
+      <h1 id="title">مسابقة التواصل الشفهي باللغة العربية</h1>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="loading" class="card center muted">جارٍ التحميل… Loading…</div>
+
+    <div id="closed" class="card center" hidden>
+      <div class="big">🔒</div>
+      <h2 style="justify-content:center">التصويت مغلق حالياً</h2>
+      <p class="muted">Voting is closed. شكراً لمشاركتكم!</p>
+    </div>
+
+    <!-- Step A: find a speaker (only when no QR speaker) -->
+    <section id="find" class="card" hidden>
+      <h2>ابحث عن المتحدث <small>Find the speaker</small></h2>
+      <input id="q" class="search" type="search" placeholder="اكتب الاسم… Type a name" autocomplete="off">
+      <div class="years" id="years"></div>
+      <div class="names" id="names"></div>
+      <p class="muted" style="font-size:13px;text-align:center;margin:12px 0 0">لا تجد الاسم؟ أخبر معلم اللغة العربية · Name missing? Tell the Arabic teacher.</p>
+    </section>
+
+    <!-- Step B: rate -->
+    <section id="rate" hidden>
+      <div class="speaker"><div class="n" id="spName"></div><div class="m" id="spMeta"></div></div>
+      <div class="card">
+        <div id="voterBox">
+          <h2>من أنت؟ <small>Who are you?</small></h2>
+          <div class="voters" id="voters"></div>
+        </div>
+        <div class="who" id="whoLine" hidden><span>تقيّم بصفتك: <b id="whoName"></b></span><button type="button" id="changeWho">تغيير</button></div>
+        <div id="qs"></div>
+        <button type="button" class="addc" id="addc">+ أضف كلمة تشجيع (اختياري)</button>
+        <textarea id="comment" maxlength="300" rows="2" placeholder="كلمة تشجيع للمتحدث…" hidden></textarea>
+        <p id="error" class="error" hidden></p>
+        <button type="button" id="send" class="btn send">أرسل · Send</button>
+      </div>
+      <button type="button" class="back" id="backBtn">→ اختر متحدثاً آخر</button>
+    </section>
+
+    <div id="done" class="card center" hidden>
+      <div class="big">🌟</div>
+      <h2 style="justify-content:center">شكراً! تم التقييم</h2>
+      <p class="muted">Thank you! Scan the next speaker's QR code.</p>
+      <p><b id="doneName" dir="ltr"></b> · <span id="doneTotal"></span></p>
+      <button type="button" id="again" class="btn ghost">قيّم متحدثاً آخر · Rate another</button>
+    </div>
+  </main>
+
+<script>
+const CONFIG = {
+  baseUrl: location.origin + location.pathname.replace(/[^/]*$/, ''),
+  projectId: (new URLSearchParams(location.search).get('project') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 20),
+  page: 'vote'
+};
+const VOTERS = [
+  { id: 'student', ar: 'طالب', en: 'Student' },
+  { id: 'parent',  ar: 'ولي أمر', en: 'Parent' },
+  { id: 'staff',   ar: 'معلم / زائر', en: 'Staff' }
+];
+const SCALE = ['يحتاج إلى تطوير', 'مقبول', 'جيد', 'جيد جداً', 'ممتاز'];
+let DATA = null, current = null, yearFilter = '';
+const scores = {};
+
+const $ = id => document.getElementById(id);
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+function deviceId() {
+  let d = store('aoc_device');
+  if (!d) { d = Math.random().toString(36).slice(2) + Date.now().toString(36); store('aoc_device', d); }
+  return d || (window._dev = window._dev || Math.random().toString(36).slice(2));
+}
+let voted = (() => { try { return JSON.parse(store('aoc_voted') || '[]'); } catch (e) { return []; } })();
+function markVoted(id) { voted.push(id); store('aoc_voted', JSON.stringify(voted)); }
+let voter = store('aoc_voter');
+function showOnly(id) { ['find', 'rate', 'done', 'closed', 'loading'].forEach(x => $(x).hidden = x !== id); window.scrollTo(0, 0); }
+function showError(m) { $('error').textContent = m || ''; $('error').hidden = !m; }
+
+function init(data) {
+  DATA = data;
+  $('title').textContent = data.title;
+  document.title = data.title;
+  if (!data.votingOpen) return showOnly('closed');
+
+  // year filter chips
+  const years = [...new Set(data.projects.map(p => p.year).filter(Boolean))];
+  const yb = $('years');
+  [''].concat(years).forEach(y => {
+    const b = el('button', y === '' ? 'on' : '', y || 'الكل · All');
+    b.type = 'button';
+    b.addEventListener('click', () => { yearFilter = y; [...yb.children].forEach(c => c.classList.toggle('on', c === b)); renderNames(); });
+    yb.appendChild(b);
+  });
+  $('q').addEventListener('input', renderNames);
+
+  // voter chips
+  VOTERS.forEach(v => {
+    const b = el('button', 'chip', v.ar);
+    b.type = 'button';
+    b.appendChild(el('span', '', v.en));
+    b.addEventListener('click', () => { setVoter(v.id); });
+    $('voters').appendChild(b);
+  });
+  $('changeWho').addEventListener('click', () => { $('voterBox').hidden = false; $('whoLine').hidden = true; });
+
+  // criteria
+  data.criteria.forEach(c => {
+    const q = el('div', 'q');
+    q.appendChild(el('h3', '', c.ar + ' · ' + c.en));
+    q.appendChild(el('div', 'h', c.hint));
+    const row = el('div', 'stars'), lab = el('div', 'stars-l', '');
+    for (let n = 1; n <= 5; n++) {
+      const b = el('button', '', '⭐');
+      b.type = 'button';
+      b.setAttribute('aria-label', c.en + ' ' + n + '/5');
+      b.addEventListener('click', () => {
+        scores[c.id] = n;
+        [...row.children].forEach((x, i) => x.classList.toggle('lit', i < n));
+        lab.textContent = n + ' — ' + SCALE[n - 1];
+        showError('');
+      });
+      row.appendChild(b);
+    }
+    q.appendChild(row); q.appendChild(lab);
+    $('qs').appendChild(q);
+  });
+
+  $('addc').addEventListener('click', () => { $('comment').hidden = false; $('addc').hidden = true; $('comment').focus(); });
+  $('send').addEventListener('click', send);
+  $('backBtn').addEventListener('click', openFind);
+  $('again').addEventListener('click', openFind);
+
+  const pre = data.projects.find(p => p.id === CONFIG.projectId);
+  if (pre) openRate(pre); else openFind();
+}
+
+function renderNames() {
+  const q = $('q').value.trim().toLowerCase();
+  const box = $('names'); box.textContent = '';
+  const list = DATA.projects.filter(p => (!yearFilter || p.year === yearFilter) &&
+    (!q || p.name.toLowerCase().includes(q) || (p.topic || '').toLowerCase().includes(q)));
+  list.slice(0, 60).forEach(p => {
+    const b = el('button', 'name' + (voted.includes(p.id) ? ' done' : ''));
+    b.type = 'button';
+    b.appendChild(el('span', '', p.name));
+    b.appendChild(el('small', '', p.year));
+    b.addEventListener('click', () => openRate(p));
+    box.appendChild(b);
+  });
+  if (!list.length) box.appendChild(el('div', 'empty', 'لا توجد نتائج — No match'));
+  else if (list.length > 60) box.appendChild(el('div', 'empty', 'اكتب جزءاً من الاسم لرؤية المزيد — type to narrow down'));
+}
+
+function openFind() { current = null; showOnly('find'); renderNames(); }
+
+function setVoter(id) {
+  voter = id; store('aoc_voter', id);
+  const v = VOTERS.find(x => x.id === id);
+  $('whoName').textContent = v ? v.ar : '';
+  $('voterBox').hidden = true; $('whoLine').hidden = false;
+  showError('');
+}
+
+function openRate(p) {
+  current = p;
+  for (const k in scores) delete scores[k];
+  document.querySelectorAll('.stars button').forEach(b => b.classList.remove('lit'));
+  document.querySelectorAll('.stars-l').forEach(l => l.textContent = '');
+  $('comment').value = ''; $('comment').hidden = true; $('addc').hidden = false;
+  $('spName').textContent = p.name;
+  $('spMeta').textContent = [p.year, p.title || p.topic].filter(Boolean).join(' · ');
+  if (voter && VOTERS.some(v => v.id === voter)) setVoter(voter);
+  else { $('voterBox').hidden = false; $('whoLine').hidden = true; }
+  showError('');
+  showOnly('rate');
+  if (voted.includes(p.id)) showError('لقد قيّمت هذا المتحدث من قبل — You have already rated this speaker.');
+}
+
+function send() {
+  if (!voter) return showError('اختر: طالب / ولي أمر / معلم — Choose who you are.');
+  const missing = DATA.criteria.filter(c => !scores[c.id]).length;
+  if (missing) return showError('أكمل النجوم (' + missing + ' متبقية) — Tap the stars for each one.');
+  if (voted.includes(current.id)) return showError('لقد قيّمت هذا المتحدث من قبل — You have already rated this speaker.');
+  const btn = $('send'); btn.disabled = true; btn.textContent = 'جارٍ الإرسال…';
+  const p = current;
+  google.script.run
+    .withSuccessHandler(res => {
+      markVoted(p.id);
+      $('doneName').textContent = p.name;
+      $('doneTotal').textContent = res.total + ' / ' + res.max + ' ⭐';
+      btn.disabled = false; btn.textContent = 'أرسل · Send';
+      showOnly('done');
+    })
+    .withFailureHandler(err => {
+      showError(String((err && err.message) || err).replace(/^.*?Error:\s*/, ''));
+      btn.disabled = false; btn.textContent = 'أرسل · Send';
+    })
+    .submitVote({ projectId: p.id, voterType: voter, scores: DATA.criteria.map(c => scores[c.id]), comment: $('comment').value, deviceId: deviceId() });
+}
+
+google.script.run
+  .withSuccessHandler(init)
+  .withFailureHandler(() => { $('loading').textContent = 'تعذّر التحميل، يرجى إعادة المحاولة — Could not load, please refresh.'; })
+  .getPublicData();
+</script>
+</body>
+</html>
