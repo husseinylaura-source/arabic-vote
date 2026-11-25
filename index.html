@@ -97,7 +97,19 @@ window.google = { script: { run: (function () {
 </script>
   <style>
     .top{padding:16px 0 18px}
-    .top h1{font-size:clamp(20px,5vw,28px)}
+    .top .wrap{position:relative}
+    .top h1{font-size:clamp(20px,5vw,28px);padding-inline-end:90px}
+    .top .sub2{margin:2px 0 0;opacity:.8;font-size:14px}
+    .langsw{position:absolute;top:0;inset-inline-end:16px;font:inherit;font-size:13px;font-weight:700;color:#fff;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:6px 12px;cursor:pointer;min-height:34px}
+    html[dir=ltr] .eyebrow{text-align:left}
+    .alt{display:block;font-size:.78em;font-weight:500;color:var(--muted);margin-top:1px}
+    .chip .alt{color:inherit;opacity:.75}
+    .btn .alt{color:inherit;opacity:.8}
+    .langpick{display:grid;gap:12px}
+    .langbtn{font:inherit;text-align:center;border:2px solid var(--line);background:#fff;border-radius:18px;padding:22px 16px;cursor:pointer;color:var(--ink)}
+    .langbtn b{display:block;font-size:26px;color:var(--green)}
+    .langbtn span{display:block;color:var(--muted);font-size:14px;margin-top:4px}
+    .langbtn:hover,.langbtn:focus-visible{border-color:var(--green);outline:none}
     .who{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted);margin-bottom:12px}
     .who b{color:var(--green)}
     .who button{font:inherit;font-size:13px;color:var(--green);background:none;border:0;text-decoration:underline;cursor:pointer;min-height:36px}
@@ -115,70 +127,85 @@ window.google = { script: { run: (function () {
     .speaker .n{font-size:24px;font-weight:800;direction:ltr}
     .speaker .m{opacity:.85;font-size:14px}
     .voters{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-    .q{padding:12px 0;border-top:1px dashed var(--line)}
+    .q{padding:14px 0;border-top:1px dashed var(--line)}
     .q:first-child{border-top:0;padding-top:0}
-    .q h3{margin:0;font-size:18px}
-    .q .h{font-size:13px;color:var(--muted);margin:2px 0 8px}
-    .stars{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;direction:rtl}
-    .stars button{font-size:30px;line-height:1;padding:8px 0;border-radius:12px;border:2px solid var(--line);background:#fff;cursor:pointer;filter:grayscale(1);opacity:.45}
+    .q h3{margin:0;font-size:17px;display:flex;gap:8px;align-items:flex-start}
+    .q h3 .qn{flex:none;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--sage-l);color:var(--green);font-size:13px;margin-top:2px}
+    .q .h{font-size:13.5px;color:var(--ink);opacity:.8;margin:4px 0 0}
+    .q .h2{font-size:12.5px;color:var(--muted);margin:1px 0 8px}
+    .stars{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;direction:ltr}
+    .stars button{font-size:28px;line-height:1;padding:8px 0;border-radius:12px;border:2px solid var(--line);background:#fff;cursor:pointer;filter:grayscale(1);opacity:.45}
     .stars button.lit{filter:none;opacity:1;border-color:var(--gold);background:#fffaf0}
     .stars-l{font-size:13px;font-weight:700;color:var(--green);min-height:18px;margin-top:4px}
-    .send{width:100%;font-size:19px;padding:16px;margin-top:6px}
+    .progress{position:sticky;top:0;z-index:2;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);padding:8px 0;margin-bottom:8px;font-size:14px;font-weight:700;color:var(--green);display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line)}
+    .send{width:100%;font-size:18px;padding:14px;margin-top:6px}
     .addc{font:inherit;font-size:14px;color:var(--green);background:none;border:0;text-decoration:underline;cursor:pointer;min-height:40px}
     .back{font:inherit;font-size:14px;color:var(--green);background:none;border:0;cursor:pointer;min-height:40px;padding:0}
     .empty{text-align:center;color:var(--muted);padding:16px}
+    .note{font-size:13px;text-align:center;color:var(--muted);margin:12px 0 0}
   </style>
 </head>
 <body>
   <header class="top">
     <div class="wrap">
+      <button type="button" class="langsw" id="langsw" hidden>English</button>
       <div class="eyebrow">Arabic A · Oral Communication</div>
       <h1 id="title">مسابقة التواصل الشفهي باللغة العربية</h1>
+      <p class="sub2" id="subtitle">Arabic Oral Communication Competition</p>
     </div>
   </header>
 
   <main class="wrap">
     <div id="loading" class="card center muted">جارٍ التحميل… Loading…</div>
 
-    <div id="closed" class="card center" hidden>
-      <div class="big">🔒</div>
-      <h2 style="justify-content:center">التصويت مغلق حالياً</h2>
-      <p class="muted">Voting is closed. شكراً لمشاركتكم!</p>
-    </div>
-
-    <!-- Step A: find a speaker (only when no QR speaker) -->
-    <section id="find" class="card" hidden>
-      <h2>ابحث عن المتحدث <small>Find the speaker</small></h2>
-      <input id="q" class="search" type="search" placeholder="اكتب الاسم… Type a name" autocomplete="off">
-      <div class="years" id="years"></div>
-      <div class="names" id="names"></div>
-      <p class="muted" style="font-size:13px;text-align:center;margin:12px 0 0">لا تجد الاسم؟ أخبر معلم اللغة العربية · Name missing? Tell the Arabic teacher.</p>
+    <!-- Step 0: language -->
+    <section id="lang" class="card" hidden>
+      <h2 style="justify-content:center;text-align:center">اختر اللغة · Choose your language</h2>
+      <div class="langpick">
+        <button type="button" class="langbtn" data-lang="ar"><b>العربية</b><span>ابدأ بالعربية (مع الإنجليزية تحتها)</span></button>
+        <button type="button" class="langbtn" data-lang="en" dir="ltr"><b>English</b><span>Start in English (with Arabic underneath)</span></button>
+      </div>
     </section>
 
-    <!-- Step B: rate -->
+    <div id="closed" class="card center" hidden>
+      <div class="big">🔒</div>
+      <h2 style="justify-content:center" data-t="closed"></h2>
+    </div>
+
+    <!-- Step 1: find a speaker -->
+    <section id="find" class="card" hidden>
+      <h2 data-t="find"></h2>
+      <input id="q" class="search" type="search" autocomplete="off">
+      <div class="years" id="years"></div>
+      <div class="names" id="names"></div>
+      <p class="note" data-t="missing"></p>
+    </section>
+
+    <!-- Step 2: rate -->
     <section id="rate" hidden>
       <div class="speaker"><div class="n" id="spName"></div><div class="m" id="spMeta"></div></div>
       <div class="card">
         <div id="voterBox">
-          <h2>من أنت؟ <small>Who are you?</small></h2>
+          <h2 data-t="who"></h2>
           <div class="voters" id="voters"></div>
         </div>
-        <div class="who" id="whoLine" hidden><span>تقيّم بصفتك: <b id="whoName"></b></span><button type="button" id="changeWho">تغيير</button></div>
+        <div class="who" id="whoLine" hidden><span><span data-t1="ratingAs"></span> <b id="whoName"></b></span><button type="button" id="changeWho" data-t1="change"></button></div>
+        <div class="progress"><span id="prog"></span><span id="tot"></span></div>
         <div id="qs"></div>
-        <button type="button" class="addc" id="addc">+ أضف كلمة تشجيع (اختياري)</button>
-        <textarea id="comment" maxlength="300" rows="2" placeholder="كلمة تشجيع للمتحدث…" hidden></textarea>
+        <button type="button" class="addc" id="addc" data-t1="addComment"></button>
+        <textarea id="comment" maxlength="300" rows="2" hidden></textarea>
         <p id="error" class="error" hidden></p>
-        <button type="button" id="send" class="btn send">أرسل · Send</button>
+        <button type="button" id="send" class="btn send"></button>
       </div>
-      <button type="button" class="back" id="backBtn">→ اختر متحدثاً آخر</button>
+      <button type="button" class="back" id="backBtn"></button>
     </section>
 
     <div id="done" class="card center" hidden>
       <div class="big">🌟</div>
-      <h2 style="justify-content:center">شكراً! تم التقييم</h2>
-      <p class="muted">Thank you! Scan the next speaker's QR code.</p>
+      <h2 style="justify-content:center" data-t="thanks"></h2>
       <p><b id="doneName" dir="ltr"></b> · <span id="doneTotal"></span></p>
-      <button type="button" id="again" class="btn ghost">قيّم متحدثاً آخر · Rate another</button>
+      <p class="muted" data-t="next"></p>
+      <button type="button" id="again" class="btn" data-t="again"></button>
     </div>
   </main>
 
@@ -188,13 +215,36 @@ const CONFIG = {
   projectId: (new URLSearchParams(location.search).get('project') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 20),
   page: 'vote'
 };
-const VOTERS = [
-  { id: 'student', ar: 'طالب', en: 'Student' },
-  { id: 'parent',  ar: 'ولي أمر', en: 'Parent' },
-  { id: 'staff',   ar: 'معلم / زائر', en: 'Staff' }
-];
-const SCALE = ['يحتاج إلى تطوير', 'مقبول', 'جيد', 'جيد جداً', 'ممتاز'];
-let DATA = null, current = null, yearFilter = '';
+const T = {
+  ar: {
+    title: 'مسابقة التواصل الشفهي باللغة العربية', closed: 'التصويت مغلق حالياً', find: 'اختر المتحدث الذي تريد تقييمه',
+    search: 'اكتب اسم الطالب…', all: 'الكل', noMatch: 'لا توجد نتائج', narrow: 'اكتب جزءاً من الاسم لرؤية المزيد',
+    missing: 'لا تجد الاسم؟ أخبر معلم اللغة العربية', who: 'من أنت؟', ratingAs: 'تقيّم بصفتك:', change: 'تغيير',
+    student: 'طالب', parent: 'ولي أمر', staff: 'معلم / زائر',
+    scale: ['يحتاج إلى تطوير', 'مقبول', 'جيد', 'جيد جداً', 'ممتاز'],
+    prog: (n, m) => 'تم تقييم ' + n + ' من ' + m, total: 'المجموع',
+    addComment: '+ أضف كلمة تشجيع (اختياري)', commentPh: 'كلمة تشجيع للمتحدث…',
+    send: 'أرسل التقييم', sending: 'جارٍ الإرسال…', back: '→ اختر متحدثاً آخر',
+    thanks: 'شكراً! تم إرسال تقييمك', next: 'يمكنك الآن تقييم متحدث آخر', again: 'قيّم متحدثاً آخر',
+    errWho: 'اختر: طالب / ولي أمر / معلم', errRate: n => 'أكمل تقييم جميع المعايير (' + n + ' متبقية)',
+    errDone: 'لقد قيّمت هذا المتحدث من قبل', switchTo: 'English'
+  },
+  en: {
+    title: 'Arabic Oral Communication Competition', closed: 'Voting is closed', find: 'Choose the speaker you want to rate',
+    search: 'Type a student name…', all: 'All', noMatch: 'No match', narrow: 'Type part of a name to see more',
+    missing: 'Name missing? Tell the Arabic teacher', who: 'Who are you?', ratingAs: 'Rating as:', change: 'Change',
+    student: 'Student', parent: 'Parent', staff: 'Staff / Visitor',
+    scale: ['Needs work', 'Fair', 'Good', 'Very good', 'Excellent'],
+    prog: (n, m) => n + ' of ' + m + ' rated', total: 'Total',
+    addComment: '+ Add a comment (optional)', commentPh: 'A word of encouragement…',
+    send: 'Send rating', sending: 'Sending…', back: '← Choose another speaker',
+    thanks: 'Thank you! Your rating was sent', next: 'You can now rate another speaker', again: 'Rate another speaker',
+    errWho: 'Choose: Student / Parent / Staff', errRate: n => 'Please rate every criterion (' + n + ' left)',
+    errDone: 'You have already rated this speaker', switchTo: 'العربية'
+  }
+};
+const VOTERS = ['student', 'parent', 'staff'];
+let LANG = 'ar', chosen = false, DATA = null, current = null, yearFilter = '';
 const scores = {};
 
 const $ = id => document.getElementById(id);
@@ -205,6 +255,14 @@ function el(tag, cls, text) {
   return e;
 }
 function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+const other = () => LANG === 'ar' ? 'en' : 'ar';
+const pick = (l, k, a) => { const v = T[l][k]; return typeof v === 'function' ? v(...a) : v; };
+const t = (k, ...a) => pick(LANG, k, a);
+const t2 = (k, ...a) => pick(other(), k, a);
+const both = (k, ...a) => t(k, ...a) + ' · ' + t2(k, ...a);
+// primary text with the second language in a smaller line underneath
+function dual(node, k) { node.textContent = t(k); node.appendChild(el('span', 'alt', t2(k))); }
+
 function deviceId() {
   let d = store('aoc_device');
   if (!d) { d = Math.random().toString(36).slice(2) + Date.now().toString(36); store('aoc_device', d); }
@@ -213,65 +271,96 @@ function deviceId() {
 let voted = (() => { try { return JSON.parse(store('aoc_voted') || '[]'); } catch (e) { return []; } })();
 function markVoted(id) { voted.push(id); store('aoc_voted', JSON.stringify(voted)); }
 let voter = store('aoc_voter');
-function showOnly(id) { ['find', 'rate', 'done', 'closed', 'loading'].forEach(x => $(x).hidden = x !== id); window.scrollTo(0, 0); }
+if (!VOTERS.includes(voter)) voter = null;
+const SCREENS = ['lang', 'find', 'rate', 'done', 'closed', 'loading'];
+function showOnly(id) { SCREENS.forEach(x => $(x).hidden = x !== id); window.scrollTo(0, 0); }
 function showError(m) { $('error').textContent = m || ''; $('error').hidden = !m; }
 
-function init(data) {
-  DATA = data;
-  $('title').textContent = data.title;
-  document.title = data.title;
-  if (!data.votingOpen) return showOnly('closed');
+function setLang(l) {
+  LANG = l; store('aoc_lang', l);
+  document.documentElement.lang = l;
+  document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+  applyText();
+}
 
-  // year filter chips
-  const years = [...new Set(data.projects.map(p => p.year).filter(Boolean))];
-  const yb = $('years');
+function applyText() {
+  const arTitle = DATA ? DATA.title : T.ar.title;
+  $('title').textContent = LANG === 'ar' ? arTitle : T.en.title;
+  $('subtitle').textContent = LANG === 'ar' ? T.en.title : arTitle;
+  document.title = $('title').textContent;
+  $('langsw').textContent = t('switchTo');
+  $('langsw').hidden = !chosen;
+  document.querySelectorAll('[data-t]').forEach(n => dual(n, n.dataset.t));
+  document.querySelectorAll('[data-t1]').forEach(n => n.textContent = t(n.dataset.t1));
+  $('q').placeholder = both('search');
+  $('comment').placeholder = t('commentPh');
+  $('send').textContent = both('send');
+  $('backBtn').textContent = t('back');
+  if (DATA) {
+    buildYears(); buildVoters(); buildCriteria(); renderNames(); updateProgress();
+    if (voter) setVoter(voter, true);
+  }
+}
+
+function buildYears() {
+  const years = [...new Set(DATA.projects.map(p => p.year).filter(Boolean))];
+  const yb = $('years'); yb.textContent = '';
   [''].concat(years).forEach(y => {
-    const b = el('button', y === '' ? 'on' : '', y || 'الكل · All');
+    const b = el('button', y === yearFilter ? 'on' : '', y || t('all'));
     b.type = 'button';
     b.addEventListener('click', () => { yearFilter = y; [...yb.children].forEach(c => c.classList.toggle('on', c === b)); renderNames(); });
     yb.appendChild(b);
   });
-  $('q').addEventListener('input', renderNames);
+}
 
-  // voter chips
-  VOTERS.forEach(v => {
-    const b = el('button', 'chip', v.ar);
+function buildVoters() {
+  const box = $('voters'); box.textContent = '';
+  VOTERS.forEach(id => {
+    const b = el('button', 'chip' + (voter === id ? ' on' : ''));
     b.type = 'button';
-    b.appendChild(el('span', '', v.en));
-    b.addEventListener('click', () => { setVoter(v.id); });
-    $('voters').appendChild(b);
+    dual(b, id);
+    b.addEventListener('click', () => setVoter(id));
+    box.appendChild(b);
   });
-  $('changeWho').addEventListener('click', () => { $('voterBox').hidden = false; $('whoLine').hidden = true; });
+}
 
-  // criteria
-  data.criteria.forEach(c => {
+function scaleText(n) { return n + ' — ' + T[LANG].scale[n - 1] + ' · ' + T[other()].scale[n - 1]; }
+
+function buildCriteria() {
+  const wrap = $('qs'); wrap.textContent = '';
+  DATA.criteria.forEach((c, i) => {
     const q = el('div', 'q');
-    q.appendChild(el('h3', '', c.ar + ' · ' + c.en));
-    q.appendChild(el('div', 'h', c.hint));
-    const row = el('div', 'stars'), lab = el('div', 'stars-l', '');
+    const h = el('h3');
+    h.appendChild(el('span', 'qn', String(i + 1)));
+    const ttl = el('span', '', LANG === 'ar' ? c.ar : c.en);
+    ttl.appendChild(el('span', 'alt', LANG === 'ar' ? c.en : c.ar));
+    h.appendChild(ttl);
+    q.appendChild(h);
+    q.appendChild(el('p', 'h', LANG === 'ar' ? c.hintAr : c.hintEn));
+    q.appendChild(el('p', 'h2', LANG === 'ar' ? c.hintEn : c.hintAr));
+    const row = el('div', 'stars'), lab = el('div', 'stars-l', scores[c.id] ? scaleText(scores[c.id]) : '');
     for (let n = 1; n <= 5; n++) {
-      const b = el('button', '', '⭐');
+      const b = el('button', scores[c.id] >= n ? 'lit' : '', '⭐');
       b.type = 'button';
       b.setAttribute('aria-label', c.en + ' ' + n + '/5');
       b.addEventListener('click', () => {
         scores[c.id] = n;
-        [...row.children].forEach((x, i) => x.classList.toggle('lit', i < n));
-        lab.textContent = n + ' — ' + SCALE[n - 1];
-        showError('');
+        [...row.children].forEach((x, k) => x.classList.toggle('lit', k < n));
+        lab.textContent = scaleText(n);
+        showError(''); updateProgress();
       });
       row.appendChild(b);
     }
     q.appendChild(row); q.appendChild(lab);
-    $('qs').appendChild(q);
+    wrap.appendChild(q);
   });
+}
 
-  $('addc').addEventListener('click', () => { $('comment').hidden = false; $('addc').hidden = true; $('comment').focus(); });
-  $('send').addEventListener('click', send);
-  $('backBtn').addEventListener('click', openFind);
-  $('again').addEventListener('click', openFind);
-
-  const pre = data.projects.find(p => p.id === CONFIG.projectId);
-  if (pre) openRate(pre); else openFind();
+function updateProgress() {
+  if (!DATA) return;
+  const n = DATA.criteria.filter(c => scores[c.id]).length, m = DATA.criteria.length;
+  $('prog').textContent = t('prog', n, m);
+  $('tot').textContent = t('total') + ' ' + Object.values(scores).reduce((a, b) => a + b, 0) + ' / ' + m * 5;
 }
 
 function renderNames() {
@@ -287,60 +376,86 @@ function renderNames() {
     b.addEventListener('click', () => openRate(p));
     box.appendChild(b);
   });
-  if (!list.length) box.appendChild(el('div', 'empty', 'لا توجد نتائج — No match'));
-  else if (list.length > 60) box.appendChild(el('div', 'empty', 'اكتب جزءاً من الاسم لرؤية المزيد — type to narrow down'));
+  if (!list.length) box.appendChild(el('div', 'empty', both('noMatch')));
+  else if (list.length > 60) box.appendChild(el('div', 'empty', both('narrow')));
 }
 
 function openFind() { current = null; showOnly('find'); renderNames(); }
 
-function setVoter(id) {
+function setVoter(id, silent) {
   voter = id; store('aoc_voter', id);
-  const v = VOTERS.find(x => x.id === id);
-  $('whoName').textContent = v ? v.ar : '';
+  $('whoName').textContent = both(id);
   $('voterBox').hidden = true; $('whoLine').hidden = false;
-  showError('');
+  if (!silent) showError('');
 }
 
 function openRate(p) {
   current = p;
   for (const k in scores) delete scores[k];
-  document.querySelectorAll('.stars button').forEach(b => b.classList.remove('lit'));
-  document.querySelectorAll('.stars-l').forEach(l => l.textContent = '');
+  buildCriteria(); updateProgress();
   $('comment').value = ''; $('comment').hidden = true; $('addc').hidden = false;
   $('spName').textContent = p.name;
   $('spMeta').textContent = [p.year, p.title || p.topic].filter(Boolean).join(' · ');
-  if (voter && VOTERS.some(v => v.id === voter)) setVoter(voter);
+  if (voter) setVoter(voter);
   else { $('voterBox').hidden = false; $('whoLine').hidden = true; }
   showError('');
   showOnly('rate');
-  if (voted.includes(p.id)) showError('لقد قيّمت هذا المتحدث من قبل — You have already rated this speaker.');
+  if (voted.includes(p.id)) showError(both('errDone'));
 }
 
 function send() {
-  if (!voter) return showError('اختر: طالب / ولي أمر / معلم — Choose who you are.');
+  if (!voter) { showError(both('errWho')); $('voterBox').scrollIntoView({ behavior: 'smooth' }); return; }
   const missing = DATA.criteria.filter(c => !scores[c.id]).length;
-  if (missing) return showError('أكمل النجوم (' + missing + ' متبقية) — Tap the stars for each one.');
-  if (voted.includes(current.id)) return showError('لقد قيّمت هذا المتحدث من قبل — You have already rated this speaker.');
-  const btn = $('send'); btn.disabled = true; btn.textContent = 'جارٍ الإرسال…';
+  if (missing) return showError(both('errRate', missing));
+  if (voted.includes(current.id)) return showError(both('errDone'));
+  const btn = $('send'); btn.disabled = true; btn.textContent = t('sending');
   const p = current;
   google.script.run
     .withSuccessHandler(res => {
       markVoted(p.id);
       $('doneName').textContent = p.name;
       $('doneTotal').textContent = res.total + ' / ' + res.max + ' ⭐';
-      btn.disabled = false; btn.textContent = 'أرسل · Send';
+      btn.disabled = false; btn.textContent = both('send');
       showOnly('done');
     })
     .withFailureHandler(err => {
       showError(String((err && err.message) || err).replace(/^.*?Error:\s*/, ''));
-      btn.disabled = false; btn.textContent = 'أرسل · Send';
+      btn.disabled = false; btn.textContent = both('send');
     })
     .submitVote({ projectId: p.id, voterType: voter, scores: DATA.criteria.map(c => scores[c.id]), comment: $('comment').value, deviceId: deviceId() });
 }
 
+function start() {
+  if (!DATA.votingOpen) return showOnly('closed');
+  const pre = DATA.projects.find(p => p.id === CONFIG.projectId);
+  if (pre) openRate(pre); else openFind();
+}
+
+// events
+document.querySelectorAll('.langbtn').forEach(b => b.addEventListener('click', () => {
+  chosen = true; setLang(b.dataset.lang);
+  if (DATA) start(); else showOnly('loading');
+}));
+$('langsw').addEventListener('click', () => setLang(other()));
+$('q').addEventListener('input', renderNames);
+$('changeWho').addEventListener('click', () => { $('voterBox').hidden = false; $('whoLine').hidden = true; });
+$('addc').addEventListener('click', () => { $('comment').hidden = false; $('addc').hidden = true; $('comment').focus(); });
+$('send').addEventListener('click', send);
+$('backBtn').addEventListener('click', openFind);
+$('again').addEventListener('click', openFind);
+
+// boot: the language question comes first (remembered on this phone afterwards)
+const savedLang = store('aoc_lang');
+if (savedLang === 'ar' || savedLang === 'en') { chosen = true; setLang(savedLang); }
+else showOnly('lang');
+
 google.script.run
-  .withSuccessHandler(init)
-  .withFailureHandler(() => { $('loading').textContent = 'تعذّر التحميل، يرجى إعادة المحاولة — Could not load, please refresh.'; })
+  .withSuccessHandler(data => {
+    DATA = data;
+    applyText();
+    if (chosen) start();
+  })
+  .withFailureHandler(() => { $('loading').hidden = false; $('loading').textContent = 'تعذّر التحميل، يرجى إعادة المحاولة — Could not load, please refresh.'; })
   .getPublicData();
 </script>
 </body>
